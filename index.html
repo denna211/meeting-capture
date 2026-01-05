@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ad-Wise Capture">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Meeting Capture | Ad-Wise Agency</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1a1a1a;
+            --accent: #00ff88;
+            --accent-dim: #00cc6a;
+            --accent-glow: rgba(0, 255, 136, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --danger: #ff4757;
+            --danger-glow: rgba(255, 71, 87, 0.2);
+            --border: #2a2a2a;
+            --radius: 16px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            z-index: 1;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Login Screen */
+        .login-container {
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .logo-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .input-group input::placeholder {
+            color: var(--text-muted);
+            letter-spacing: 4px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dim);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .error-msg {
+            text-align: center;
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 16px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .error-msg.visible {
+            opacity: 1;
+        }
+
+        /* Main Recording Screen */
+        .main-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .header h1 span {
+            color: var(--accent);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+        }
+
+        .status-badge.recording {
+            background: var(--danger-glow);
+            color: var(--danger);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .status-badge.recording .status-dot {
+            background: var(--danger);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Waveform Visualizer */
+        .visualizer-container {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .visualizer-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .timer {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .timer.warning {
+            color: var(--danger);
+        }
+
+        /* Record Button */
+        .record-btn-container {
+            position: relative;
+        }
+
+        .record-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .record-btn:hover {
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .record-btn-inner {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .record-btn.recording .record-btn-inner {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--danger);
+        }
+
+        .record-btn.recording {
+            border-color: var(--danger);
+        }
+
+        .record-btn-label {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Email Input Section */
+        .email-section {
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .email-section.visible {
+            opacity: 1;
+            visibility: visible;
+            max-height: 200px;
+        }
+
+        .email-section input {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .email-section input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .email-section input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .email-section .btn {
+            margin-top: 12px;
+        }
+
+        /* Processing Screen */
+        .processing-container {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 3px solid var(--bg-tertiary);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .processing-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Success Screen */
+        .success-container {
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--accent);
+        }
+
+        .success-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .success-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Error Screen */
+        .error-container {
+            text-align: center;
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--danger-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .error-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--danger);
+        }
+
+        .error-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .error-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 300px;
+        }
+
+        /* Utility */
+        .mt-12 { margin-top: 12px; }
+
+        /* Lock Screen Indicator */
+        .lock-warning {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 100px;
+            font-size: 12px;
+            color: #ffc107;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .lock-warning.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="logo">
+                <div class="logo-text">Ad<span>-</span>Wise</div>
+                <div class="logo-sub">Meeting Capture</div>
+            </div>
+            <div class="input-group">
+                <label>Enter PIN</label>
+                <input type="password" id="pinInput" maxlength="6" placeholder="••••••" inputmode="numeric" autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="loginBtn">Unlock</button>
+            <div class="error-msg" id="loginError">Incorrect PIN. Try again.</div>
+        </div>
+    </div>
+
+    <!-- Main Recording Screen -->
+    <div id="mainScreen" class="screen">
+        <div class="main-container">
+            <div class="header">
+                <h1>Ad<span>-</span>Wise Capture</h1>
+                <div class="status-badge" id="statusBadge">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Ready</span>
+                </div>
+            </div>
+
+            <div class="visualizer-container">
+                <canvas id="visualizer"></canvas>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+
+            <div class="record-btn-container">
+                <button class="record-btn" id="recordBtn">
+                    <div class="record-btn-inner"></div>
+                </button>
+                <div class="record-btn-label" id="recordLabel">Tap to Record</div>
+            </div>
+
+            <div class="email-section" id="emailSection">
+                <div class="input-group">
+                    <label>Participant Email</label>
+                    <input type="email" id="participantEmail" placeholder="participant@email.com">
+                </div>
+                <button class="btn btn-primary" id="sendBtn">Send Summary</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Screen -->
+    <div id="processingScreen" class="screen">
+        <div class="processing-container">
+            <div class="spinner"></div>
+            <div class="processing-text">Processing Recording</div>
+            <div class="processing-sub" id="processingStatus">Uploading audio...</div>
+        </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="screen">
+        <div class="success-container">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="success-text">Summary Sent!</div>
+            <div class="success-sub">Check your inbox for the meeting summary.</div>
+            <button class="btn btn-secondary" id="newRecordingBtn">New Recording</button>
+        </div>
+    </div>
+
+    <!-- Error Screen -->
+    <div id="errorScreen" class="screen">
+        <div class="error-container">
+            <div class="error-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <div class="error-text">Something went wrong</div>
+            <div class="error-details" id="errorDetails">Unable to process the recording. Please try again.</div>
+            <button class="btn btn-secondary" id="retryBtn">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Lock Warning -->
+    <div class="lock-warning" id="lockWarning">
+        ⚠️ Keep screen on while recording
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - UPDATE THESE VALUES
+        // ============================================
+        const CONFIG = {
+            PIN: '258456', // Change this to your desired PIN
+            WEBHOOK_URL: 'YOUR_N8N_WEBHOOK_URL', // Replace with your n8n webhook URL
+            FIXED_EMAIL: 'dena@ad-wise.ca', // Replace with your constant email
+            MAX_DURATION: 600, // 10 minutes in seconds
+        };
+
+        // ============================================
+        // APP STATE
+        // ============================================
+        let state = {
+            isRecording: false,
+            mediaRecorder: null,
+            audioChunks: [],
+            audioBlob: null,
+            startTime: null,
+            timerInterval: null,
+            analyser: null,
+            audioContext: null,
+            stream: null,
+        };
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const screens = {
+            login: document.getElementById('loginScreen'),
+            main: document.getElementById('mainScreen'),
+            processing: document.getElementById('processingScreen'),
+            success: document.getElementById('successScreen'),
+            error: document.getElementById('errorScreen'),
+        };
+
+        const elements = {
+            pinInput: document.getElementById('pinInput'),
+            loginBtn: document.getElementById('loginBtn'),
+            loginError: document.getElementById('loginError'),
+            recordBtn: document.getElementById('recordBtn'),
+            recordLabel: document.getElementById('recordLabel'),
+            statusBadge: document.getElementById('statusBadge'),
+            statusText: document.getElementById('statusText'),
+            timer: document.getElementById('timer'),
+            visualizer: document.getElementById('visualizer'),
+            emailSection: document.getElementById('emailSection'),
+            participantEmail: document.getElementById('participantEmail'),
+            sendBtn: document.getElementById('sendBtn'),
+            processingStatus: document.getElementById('processingStatus'),
+            newRecordingBtn: document.getElementById('newRecordingBtn'),
+            retryBtn: document.getElementById('retryBtn'),
+            errorDetails: document.getElementById('errorDetails'),
+            lockWarning: document.getElementById('lockWarning'),
+        };
+
+        // ============================================
+        // SCREEN NAVIGATION
+        // ============================================
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.remove('active'));
+            screens[screenName].classList.add('active');
+        }
+
+        // ============================================
+        // LOGIN HANDLING
+        // ============================================
+        elements.loginBtn.addEventListener('click', handleLogin);
+        elements.pinInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+        function handleLogin() {
+            const pin = elements.pinInput.value;
+            if (pin === CONFIG.PIN) {
+                elements.loginError.classList.remove('visible');
+                showScreen('main');
+                initializeAudio();
+            } else {
+                elements.loginError.classList.add('visible');
+                elements.pinInput.value = '';
+                elements.pinInput.focus();
+            }
+        }
+
+        // ============================================
+        // AUDIO INITIALIZATION
+        // ============================================
+        async function initializeAudio() {
+            try {
+                state.stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100,
+                    }
+                });
+                
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                state.analyser = state.audioContext.createAnalyser();
+                state.analyser.fftSize = 256;
+                
+                const source = state.audioContext.createMediaStreamSource(state.stream);
+                source.connect(state.analyser);
+                
+                drawVisualizer();
+            } catch (err) {
+                console.error('Microphone access denied:', err);
+                showError('Microphone access is required. Please allow microphone access and refresh.');
+            }
+        }
+
+        // ============================================
+        // VISUALIZER
+        // ============================================
+        function drawVisualizer() {
+            const canvas = elements.visualizer;
+            const ctx = canvas.getContext('2d');
+            
+            // Set actual canvas size
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            
+            const bufferLength = state.analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function draw() {
+                requestAnimationFrame(draw);
+                
+                state.analyser.getByteFrequencyData(dataArray);
+                
+                ctx.fillStyle = '#141414';
+                ctx.fillRect(0, 0, rect.width, rect.height);
+                
+                const barWidth = (rect.width / bufferLength) * 2.5;
+                let x = 0;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = (dataArray[i] / 255) * rect.height * 0.8;
+                    
+                    const gradient = ctx.createLinearGradient(0, rect.height, 0, rect.height - barHeight);
+                    if (state.isRecording) {
+                        gradient.addColorStop(0, 'rgba(255, 71, 87, 0.8)');
+                        gradient.addColorStop(1, 'rgba(255, 71, 87, 0.2)');
+                    } else {
+                        gradient.addColorStop(0, 'rgba(0, 255, 136, 0.8)');
+                        gradient.addColorStop(1, 'rgba(0, 255, 136, 0.2)');
+                    }
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, rect.height - barHeight, barWidth - 2, barHeight);
+                    
+                    x += barWidth;
+                }
+            }
+            
+            draw();
+        }
+
+        // ============================================
+        // RECORDING
+        // ============================================
+        elements.recordBtn.addEventListener('click', toggleRecording);
+
+        function toggleRecording() {
+            if (state.isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            state.audioChunks = [];
+            state.mediaRecorder = new MediaRecorder(state.stream, {
+                mimeType: 'audio/webm;codecs=opus'
+            });
+            
+            state.mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    state.audioChunks.push(e.data);
+                }
+            };
+            
+            state.mediaRecorder.onstop = () => {
+                state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+            };
+            
+            state.mediaRecorder.start(1000); // Collect data every second
+            state.isRecording = true;
+            state.startTime = Date.now();
+            
+            // Update UI
+            elements.recordBtn.classList.add('recording');
+            elements.recordLabel.textContent = 'Tap to Stop';
+            elements.statusBadge.classList.add('recording');
+            elements.statusText.textContent = 'Recording';
+            elements.lockWarning.classList.add('visible');
+            
+            // Start timer
+            updateTimer();
+            state.timerInterval = setInterval(updateTimer, 1000);
+            
+            // Keep screen on
+            requestWakeLock();
+        }
+
+        function stopRecording() {
+            if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+                state.mediaRecorder.stop();
+            }
+            
+            state.isRecording = false;
+            clearInterval(state.timerInterval);
+            
+            // Update UI
+            elements.recordBtn.classList.remove('recording');
+            elements.recordLabel.textContent = 'Recording Stopped';
+            elements.statusBadge.classList.remove('recording');
+            elements.statusText.textContent = 'Ready to Send';
+            elements.lockWarning.classList.remove('visible');
+            
+            // Show email input
+            elements.emailSection.classList.add('visible');
+            elements.participantEmail.focus();
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            elements.timer.textContent = `${minutes}:${seconds}`;
+            
+            // Warning when approaching limit
+            if (elapsed >= CONFIG.MAX_DURATION - 60) {
+                elements.timer.classList.add('warning');
+            }
+            
+            // Auto-stop at limit
+            if (elapsed >= CONFIG.MAX_DURATION) {
+                stopRecording();
+            }
+        }
+
+        // ============================================
+        // WAKE LOCK (Keep Screen On)
+        // ============================================
+        let wakeLock = null;
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log('Wake Lock not supported or failed:', err);
+            }
+        }
+
+        // ============================================
+        // SEND TO WEBHOOK
+        // ============================================
+        elements.sendBtn.addEventListener('click', sendRecording);
+
+        async function sendRecording() {
+            const participantEmail = elements.participantEmail.value.trim();
+            
+            if (!participantEmail || !isValidEmail(participantEmail)) {
+                elements.participantEmail.style.borderColor = 'var(--danger)';
+                return;
+            }
+            
+            showScreen('processing');
+            elements.processingStatus.textContent = 'Uploading audio...';
+            
+            try {
+                // Convert blob to base64
+                const base64Audio = await blobToBase64(state.audioBlob);
+                
+                elements.processingStatus.textContent = 'Processing with AI...';
+                
+                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        audio: base64Audio,
+                        participantEmail: participantEmail,
+                        fixedEmail: CONFIG.FIXED_EMAIL,
+                        timestamp: new Date().toISOString(),
+                        duration: Math.floor((Date.now() - state.startTime) / 1000),
+                    }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+                
+                showScreen('success');
+                
+            } catch (err) {
+                console.error('Upload failed:', err);
+                showError(`Upload failed: ${err.message}`);
+            }
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // ============================================
+        // ERROR HANDLING
+        // ============================================
+        function showError(message) {
+            elements.errorDetails.textContent = message;
+            showScreen('error');
+        }
+
+        elements.retryBtn.addEventListener('click', resetApp);
+        elements.newRecordingBtn.addEventListener('click', resetApp);
+
+        function resetApp() {
+            state.audioChunks = [];
+            state.audioBlob = null;
+            state.startTime = null;
+            elements.timer.textContent = '00:00';
+            elements.timer.classList.remove('warning');
+            elements.emailSection.classList.remove('visible');
+            elements.participantEmail.value = '';
+            elements.participantEmail.style.borderColor = '';
+            elements.recordLabel.textContent = 'Tap to Record';
+            elements.statusText.textContent = 'Ready';
+            showScreen('main');
+        }
+
+        // ============================================
+        // SERVICE WORKER REGISTRATION
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => {
+                console.log('SW registration failed:', err);
+            });
+        }
+    </script>
+</body>
+</html>

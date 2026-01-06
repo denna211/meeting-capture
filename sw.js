@@ -1,4 +1,4 @@
-const CACHE_NAME = 'adwise-capture-v4';
+const CACHE_NAME = 'adwise-capture-v6';
 const urlsToCache = [
     '/',
     '/index.html',

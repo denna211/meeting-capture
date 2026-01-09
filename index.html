@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Ad-Wise Capture">
+    <meta name="apple-mobile-web-app-title" content="MedLock Capture">
     <meta name="theme-color" content="#0a0a0a">
-    <title>Meeting Capture | Ad-Wise Agency</title>
+    <title>MedLock Capture</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,17 +18,20 @@
             --bg-primary: #0a0a0a;
             --bg-secondary: #141414;
             --bg-tertiary: #1a1a1a;
-            --accent: #00ff88;
-            --accent-dim: #00cc6a;
-            --accent-glow: rgba(0, 255, 136, 0.15);
+            --accent: #0082C8;
+            --accent-dim: #006BA6;
+            --accent-glow: rgba(0, 130, 200, 0.15);
             --text-primary: #ffffff;
             --text-secondary: #888888;
             --text-muted: #555555;
             --danger: #ff4757;
             --danger-glow: rgba(255, 71, 87, 0.2);
+            --warning: #ffa502;
+            --warning-glow: rgba(255, 165, 2, 0.15);
             --border: #2a2a2a;
             --radius: 16px;
             --radius-sm: 8px;
+            --adwise-orange: #e5684b;
         }
 
         * {
@@ -66,6 +69,7 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
+            padding-bottom: 60px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
@@ -77,112 +81,36 @@
             visibility: visible;
         }
 
-        /* Login Screen */
-        .login-container {
-            width: 100%;
-            max-width: 340px;
+        /* Logo styling */
+        .logo-img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            margin-bottom: 16px;
         }
 
-        .logo {
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
             text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .logo-text {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .logo-text span {
-            color: var(--accent);
-        }
-
-        .logo-sub {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
             font-size: 12px;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
+            z-index: 100;
+            background: linear-gradient(to top, var(--bg-primary) 0%, transparent 100%);
         }
 
-        .input-group input {
-            width: 100%;
-            padding: 16px 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 18px;
-            letter-spacing: 4px;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        .footer a {
+            color: var(--adwise-orange);
+            text-decoration: none;
+            font-weight: 500;
         }
 
-        .input-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .input-group input::placeholder {
-            color: var(--text-muted);
-            letter-spacing: 4px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 18px 24px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-dim);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        .error-msg {
-            text-align: center;
-            color: var(--danger);
-            font-size: 13px;
-            margin-top: 16px;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .error-msg.visible {
-            opacity: 1;
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         /* Main Recording Screen */
@@ -192,7 +120,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 32px;
+            gap: 24px;
         }
 
         .header {
@@ -203,10 +131,7 @@
             font-size: 22px;
             font-weight: 600;
             letter-spacing: -0.3px;
-        }
-
-        .header h1 span {
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
         .status-badge {
@@ -226,6 +151,11 @@
             color: var(--danger);
         }
 
+        .status-badge.paused {
+            background: var(--warning-glow);
+            color: var(--warning);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
@@ -236,6 +166,10 @@
         .status-badge.recording .status-dot {
             background: var(--danger);
             animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .status-badge.paused .status-dot {
+            background: var(--warning);
         }
 
         @keyframes pulse {
@@ -274,11 +208,22 @@
             color: var(--danger);
         }
 
-        /* Record Button */
-        .record-btn-container {
-            position: relative;
+        /* Recording Controls */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
 
+        .main-btn-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        /* Record Button (Start) */
         .record-btn {
             width: 100px;
             height: 100px;
@@ -305,43 +250,152 @@
             transition: all 0.3s ease;
         }
 
-        .record-btn.recording .record-btn-inner {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: var(--danger);
+        .record-btn.hidden {
+            display: none;
         }
 
-        .record-btn.recording {
+        /* Control Buttons (Pause, Resume, Stop) */
+        .control-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px solid;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .control-btn.pause-btn {
+            border-color: var(--warning);
+        }
+
+        .control-btn.pause-btn svg {
+            fill: var(--warning);
+        }
+
+        .control-btn.pause-btn:hover {
+            box-shadow: 0 0 20px var(--warning-glow);
+            background: var(--warning-glow);
+        }
+
+        .control-btn.resume-btn {
+            border-color: var(--accent);
+        }
+
+        .control-btn.resume-btn svg {
+            fill: var(--accent);
+        }
+
+        .control-btn.resume-btn:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+            background: var(--accent-glow);
+        }
+
+        .control-btn.stop-btn {
             border-color: var(--danger);
         }
 
-        .record-btn-label {
+        .control-btn.stop-btn svg {
+            fill: var(--danger);
+        }
+
+        .control-btn.stop-btn:hover {
+            box-shadow: 0 0 20px var(--danger-glow);
+            background: var(--danger-glow);
+        }
+
+        .control-btn.hidden {
+            display: none;
+        }
+
+        .record-label {
             text-align: center;
-            margin-top: 16px;
             font-size: 13px;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Email Input Section */
-        .email-section {
+        /* Active recording controls row */
+        .recording-controls {
+            display: none;
+            gap: 32px;
+        }
+
+        .recording-controls.visible {
+            display: flex;
+        }
+
+        /* Email/Consent Screen */
+        .email-container {
             width: 100%;
-            opacity: 0;
-            visibility: hidden;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s ease;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
         }
 
-        .email-section.visible {
-            opacity: 1;
-            visibility: visible;
-            max-height: 200px;
+        .recording-summary {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            text-align: center;
         }
 
-        .email-section input {
+        .recording-summary .duration-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .recording-summary .duration-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .consent-box {
+            width: 100%;
+            padding: 16px;
+            background: rgba(0, 130, 200, 0.1);
+            border: 1px solid rgba(0, 130, 200, 0.2);
+            border-radius: var(--radius-sm);
+        }
+
+        .consent-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .input-group {
+            width: 100%;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
             width: 100%;
             padding: 16px 20px;
             background: var(--bg-secondary);
@@ -354,17 +408,62 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .email-section input:focus {
+        .input-group input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        .email-section input::placeholder {
+        .input-group input::placeholder {
             color: var(--text-muted);
         }
 
-        .email-section .btn {
-            margin-top: 12px;
+        .btn {
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dim);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            margin-top: 8px;
+        }
+
+        .btn-back:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
         }
 
         /* Processing Screen */
@@ -428,17 +527,12 @@
         .success-sub {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 32px;
+            margin-bottom: 8px;
         }
 
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-tertiary);
+        .success-countdown {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
         /* Error Screen */
@@ -476,13 +570,10 @@
             max-width: 300px;
         }
 
-        /* Utility */
-        .mt-12 { margin-top: 12px; }
-
         /* Lock Screen Indicator */
         .lock-warning {
             position: fixed;
-            bottom: 24px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             padding: 12px 20px;
@@ -495,7 +586,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: 100;
+            z-index: 99;
         }
 
         .lock-warning.visible {
@@ -505,27 +596,12 @@
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="screen active">
-        <div class="login-container">
-            <div class="logo">
-                <div class="logo-text">Ad<span>-</span>Wise</div>
-                <div class="logo-sub">Meeting Capture</div>
-            </div>
-            <div class="input-group">
-                <label>Enter PIN</label>
-                <input type="password" id="pinInput" maxlength="6" placeholder="••••••" inputmode="numeric" autocomplete="off">
-            </div>
-            <button class="btn btn-primary" id="loginBtn">Unlock</button>
-            <div class="error-msg" id="loginError">Incorrect PIN. Try again.</div>
-        </div>
-    </div>
-
     <!-- Main Recording Screen -->
-    <div id="mainScreen" class="screen">
+    <div id="mainScreen" class="screen active">
         <div class="main-container">
+            <img src="MedLock_Logo.png" alt="MedLock" class="logo-img">
             <div class="header">
-                <h1>Ad<span>-</span>Wise Capture</h1>
+                <h1>MedLock Capture</h1>
                 <div class="status-badge" id="statusBadge">
                     <span class="status-dot"></span>
                     <span id="statusText">Ready</span>
@@ -537,26 +613,72 @@
                 <div class="timer" id="timer">00:00</div>
             </div>
 
-            <div class="record-btn-container">
+            <div class="controls-container">
+                <!-- Start Recording Button -->
                 <button class="record-btn" id="recordBtn">
                     <div class="record-btn-inner"></div>
                 </button>
-                <div class="record-btn-label" id="recordLabel">Tap to Record</div>
+
+                <!-- Recording Controls (Pause/Resume + Stop) -->
+                <div class="recording-controls" id="recordingControls">
+                    <button class="control-btn pause-btn" id="pauseBtn" title="Pause">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="6" y="4" width="4" height="16" rx="1"/>
+                            <rect x="14" y="4" width="4" height="16" rx="1"/>
+                        </svg>
+                    </button>
+                    <button class="control-btn resume-btn hidden" id="resumeBtn" title="Resume">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <button class="control-btn stop-btn" id="stopBtn" title="Stop">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="6" y="6" width="12" height="12" rx="2"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="record-label" id="recordLabel">Tap to Record</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email/Consent Screen -->
+    <div id="emailScreen" class="screen">
+        <div class="email-container">
+            <img src="MedLock_Logo.png" alt="MedLock" class="logo-img">
+            <div class="header">
+                <h1>MedLock Capture</h1>
+                <div class="status-badge">
+                    <span class="status-dot" style="background: var(--accent);"></span>
+                    <span>Ready to Send</span>
+                </div>
             </div>
 
-            <div class="email-section" id="emailSection">
-                <div class="input-group">
-                    <label>Participant Email</label>
-                    <input type="email" id="participantEmail" placeholder="participant@email.com">
-                </div>
-                <button class="btn btn-primary" id="sendBtn">Send Summary</button>
+            <div class="recording-summary">
+                <div class="duration-label">Recording Duration</div>
+                <div class="duration-value" id="finalDuration">00:00</div>
             </div>
+
+            <div class="consent-box">
+                <p>By providing your email, you consent to having this conversation transcribed and summarized by our AI tool. Recordings are not stored after processing and will be permanently deleted.</p>
+            </div>
+
+            <div class="input-group">
+                <label>Participant Email</label>
+                <input type="email" id="participantEmail" placeholder="participant@email.com">
+            </div>
+
+            <button class="btn btn-primary" id="sendBtn">Send Summary</button>
+            <button class="btn btn-back" id="backBtn">← Back to Recording</button>
         </div>
     </div>
 
     <!-- Processing Screen -->
     <div id="processingScreen" class="screen">
         <div class="processing-container">
+            <img src="MedLock_Logo.png" alt="MedLock" class="logo-img">
             <div class="spinner"></div>
             <div class="processing-text">Processing Recording</div>
             <div class="processing-sub" id="processingStatus">Uploading audio...</div>
@@ -566,6 +688,7 @@
     <!-- Success Screen -->
     <div id="successScreen" class="screen">
         <div class="success-container">
+            <img src="MedLock_Logo.png" alt="MedLock" class="logo-img">
             <div class="success-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -573,13 +696,14 @@
             </div>
             <div class="success-text">Summary Sent!</div>
             <div class="success-sub">Check your inbox for the meeting summary.</div>
-            <button class="btn btn-secondary" id="newRecordingBtn">New Recording</button>
+            <div class="success-countdown" id="successCountdown">Starting new recording in 3...</div>
         </div>
     </div>
 
     <!-- Error Screen -->
     <div id="errorScreen" class="screen">
         <div class="error-container">
+            <img src="MedLock_Logo.png" alt="MedLock" class="logo-img">
             <div class="error-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -597,15 +721,20 @@
         ⚠️ Keep screen on while recording
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+        Designed and Powered by <a href="https://ad-wise.ca" target="_blank">Ad-Wise.ca</a>
+    </div>
+
     <script>
         // ============================================
         // CONFIGURATION - UPDATE THESE VALUES
         // ============================================
         const CONFIG = {
-            PIN: '258456', // Change this to your desired PIN
-            WEBHOOK_URL: 'https://ws8cgwwos4ow8kws8kwscgow.45.93.137.158.sslip.io/webhook/meeting-capture', // Replace with your n8n webhook URL
-            FIXED_EMAIL: 'dena@ad-wise.ca', // Replace with your constant email
+            WEBHOOK_URL: 'https://ws8cgwwos4ow8kws8kwscgow.45.93.137.158.sslip.io/webhook/meeting-capture',
+            FIXED_EMAIL: 'dena@ad-wise.ca',
             MAX_DURATION: 600, // 10 minutes in seconds
+            AUTO_RESET_DELAY: 3000, // 3 seconds
         };
 
         // ============================================
@@ -613,42 +742,48 @@
         // ============================================
         let state = {
             isRecording: false,
+            isPaused: false,
             mediaRecorder: null,
             audioChunks: [],
             audioBlob: null,
             startTime: null,
+            pausedTime: 0,
+            pauseStartTime: null,
             timerInterval: null,
             analyser: null,
             audioContext: null,
             stream: null,
+            finalDuration: 0,
         };
 
         // ============================================
         // DOM ELEMENTS
         // ============================================
         const screens = {
-            login: document.getElementById('loginScreen'),
             main: document.getElementById('mainScreen'),
+            email: document.getElementById('emailScreen'),
             processing: document.getElementById('processingScreen'),
             success: document.getElementById('successScreen'),
             error: document.getElementById('errorScreen'),
         };
 
         const elements = {
-            pinInput: document.getElementById('pinInput'),
-            loginBtn: document.getElementById('loginBtn'),
-            loginError: document.getElementById('loginError'),
             recordBtn: document.getElementById('recordBtn'),
+            recordingControls: document.getElementById('recordingControls'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            resumeBtn: document.getElementById('resumeBtn'),
+            stopBtn: document.getElementById('stopBtn'),
             recordLabel: document.getElementById('recordLabel'),
             statusBadge: document.getElementById('statusBadge'),
             statusText: document.getElementById('statusText'),
             timer: document.getElementById('timer'),
             visualizer: document.getElementById('visualizer'),
-            emailSection: document.getElementById('emailSection'),
+            finalDuration: document.getElementById('finalDuration'),
             participantEmail: document.getElementById('participantEmail'),
             sendBtn: document.getElementById('sendBtn'),
+            backBtn: document.getElementById('backBtn'),
             processingStatus: document.getElementById('processingStatus'),
-            newRecordingBtn: document.getElementById('newRecordingBtn'),
+            successCountdown: document.getElementById('successCountdown'),
             retryBtn: document.getElementById('retryBtn'),
             errorDetails: document.getElementById('errorDetails'),
             lockWarning: document.getElementById('lockWarning'),
@@ -663,25 +798,11 @@
         }
 
         // ============================================
-        // LOGIN HANDLING
+        // INITIALIZE ON LOAD
         // ============================================
-        elements.loginBtn.addEventListener('click', handleLogin);
-        elements.pinInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') handleLogin();
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAudio();
         });
-
-        function handleLogin() {
-            const pin = elements.pinInput.value;
-            if (pin === CONFIG.PIN) {
-                elements.loginError.classList.remove('visible');
-                showScreen('main');
-                initializeAudio();
-            } else {
-                elements.loginError.classList.add('visible');
-                elements.pinInput.value = '';
-                elements.pinInput.focus();
-            }
-        }
 
         // ============================================
         // AUDIO INITIALIZATION
@@ -741,12 +862,15 @@
                     const barHeight = (dataArray[i] / 255) * rect.height * 0.8;
                     
                     const gradient = ctx.createLinearGradient(0, rect.height, 0, rect.height - barHeight);
-                    if (state.isRecording) {
+                    if (state.isRecording && !state.isPaused) {
                         gradient.addColorStop(0, 'rgba(255, 71, 87, 0.8)');
                         gradient.addColorStop(1, 'rgba(255, 71, 87, 0.2)');
+                    } else if (state.isPaused) {
+                        gradient.addColorStop(0, 'rgba(255, 165, 2, 0.8)');
+                        gradient.addColorStop(1, 'rgba(255, 165, 2, 0.2)');
                     } else {
-                        gradient.addColorStop(0, 'rgba(0, 255, 136, 0.8)');
-                        gradient.addColorStop(1, 'rgba(0, 255, 136, 0.2)');
+                        gradient.addColorStop(0, 'rgba(0, 130, 200, 0.8)');
+                        gradient.addColorStop(1, 'rgba(0, 130, 200, 0.2)');
                     }
                     
                     ctx.fillStyle = gradient;
@@ -760,20 +884,16 @@
         }
 
         // ============================================
-        // RECORDING
+        // RECORDING CONTROLS
         // ============================================
-        elements.recordBtn.addEventListener('click', toggleRecording);
-
-        function toggleRecording() {
-            if (state.isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        }
+        elements.recordBtn.addEventListener('click', startRecording);
+        elements.pauseBtn.addEventListener('click', pauseRecording);
+        elements.resumeBtn.addEventListener('click', resumeRecording);
+        elements.stopBtn.addEventListener('click', stopRecording);
 
         function startRecording() {
             state.audioChunks = [];
+            state.pausedTime = 0;
             state.mediaRecorder = new MediaRecorder(state.stream, {
                 mimeType: 'audio/webm;codecs=opus'
             });
@@ -788,14 +908,19 @@
                 state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
             };
             
-            state.mediaRecorder.start(1000); // Collect data every second
+            state.mediaRecorder.start(1000);
             state.isRecording = true;
+            state.isPaused = false;
             state.startTime = Date.now();
             
             // Update UI
-            elements.recordBtn.classList.add('recording');
-            elements.recordLabel.textContent = 'Tap to Stop';
+            elements.recordBtn.classList.add('hidden');
+            elements.recordingControls.classList.add('visible');
+            elements.pauseBtn.classList.remove('hidden');
+            elements.resumeBtn.classList.add('hidden');
+            elements.recordLabel.textContent = 'Recording...';
             elements.statusBadge.classList.add('recording');
+            elements.statusBadge.classList.remove('paused');
             elements.statusText.textContent = 'Recording';
             elements.lockWarning.classList.add('visible');
             
@@ -807,28 +932,90 @@
             requestWakeLock();
         }
 
+        function pauseRecording() {
+            if (state.mediaRecorder && state.mediaRecorder.state === 'recording') {
+                state.mediaRecorder.pause();
+            }
+            
+            state.isPaused = true;
+            state.pauseStartTime = Date.now();
+            clearInterval(state.timerInterval);
+            
+            // Update UI
+            elements.pauseBtn.classList.add('hidden');
+            elements.resumeBtn.classList.remove('hidden');
+            elements.recordLabel.textContent = 'Paused';
+            elements.statusBadge.classList.remove('recording');
+            elements.statusBadge.classList.add('paused');
+            elements.statusText.textContent = 'Paused';
+        }
+
+        function resumeRecording() {
+            if (state.mediaRecorder && state.mediaRecorder.state === 'paused') {
+                state.mediaRecorder.resume();
+            }
+            
+            // Add paused duration to total paused time
+            if (state.pauseStartTime) {
+                state.pausedTime += Date.now() - state.pauseStartTime;
+                state.pauseStartTime = null;
+            }
+            
+            state.isPaused = false;
+            
+            // Update UI
+            elements.pauseBtn.classList.remove('hidden');
+            elements.resumeBtn.classList.add('hidden');
+            elements.recordLabel.textContent = 'Recording...';
+            elements.statusBadge.classList.add('recording');
+            elements.statusBadge.classList.remove('paused');
+            elements.statusText.textContent = 'Recording';
+            
+            // Resume timer
+            state.timerInterval = setInterval(updateTimer, 1000);
+        }
+
         function stopRecording() {
             if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
                 state.mediaRecorder.stop();
             }
             
+            // Calculate final duration (excluding paused time)
+            let totalPausedTime = state.pausedTime;
+            if (state.pauseStartTime) {
+                totalPausedTime += Date.now() - state.pauseStartTime;
+            }
+            state.finalDuration = Math.floor((Date.now() - state.startTime - totalPausedTime) / 1000);
+            
             state.isRecording = false;
+            state.isPaused = false;
             clearInterval(state.timerInterval);
             
             // Update UI
-            elements.recordBtn.classList.remove('recording');
-            elements.recordLabel.textContent = 'Recording Stopped';
-            elements.statusBadge.classList.remove('recording');
-            elements.statusText.textContent = 'Ready to Send';
+            elements.recordBtn.classList.remove('hidden');
+            elements.recordingControls.classList.remove('visible');
+            elements.recordLabel.textContent = 'Tap to Record';
+            elements.statusBadge.classList.remove('recording', 'paused');
+            elements.statusText.textContent = 'Ready';
             elements.lockWarning.classList.remove('visible');
             
-            // Show email input
-            elements.emailSection.classList.add('visible');
+            // Update final duration display
+            const minutes = Math.floor(state.finalDuration / 60).toString().padStart(2, '0');
+            const seconds = (state.finalDuration % 60).toString().padStart(2, '0');
+            elements.finalDuration.textContent = `${minutes}:${seconds}`;
+            
+            // Show email screen
+            showScreen('email');
             elements.participantEmail.focus();
         }
 
         function updateTimer() {
-            const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+            let totalPausedTime = state.pausedTime;
+            if (state.pauseStartTime) {
+                totalPausedTime += Date.now() - state.pauseStartTime;
+            }
+            
+            const elapsed = Math.floor((Date.now() - state.startTime - totalPausedTime) / 1000);
             const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
             const seconds = (elapsed % 60).toString().padStart(2, '0');
             elements.timer.textContent = `${minutes}:${seconds}`;
@@ -858,6 +1045,18 @@
                 console.log('Wake Lock not supported or failed:', err);
             }
         }
+
+        // ============================================
+        // BACK BUTTON (Email Screen)
+        // ============================================
+        elements.backBtn.addEventListener('click', () => {
+            // Reset timer display
+            elements.timer.textContent = '00:00';
+            elements.timer.classList.remove('warning');
+            elements.participantEmail.value = '';
+            elements.participantEmail.style.borderColor = '';
+            showScreen('main');
+        });
 
         // ============================================
         // SEND TO WEBHOOK
@@ -891,7 +1090,7 @@
                         participantEmail: participantEmail,
                         fixedEmail: CONFIG.FIXED_EMAIL,
                         timestamp: new Date().toISOString(),
-                        duration: Math.floor((Date.now() - state.startTime) / 1000),
+                        duration: state.finalDuration,
                     }),
                 });
                 
@@ -900,6 +1099,7 @@
                 }
                 
                 showScreen('success');
+                startAutoReset();
                 
             } catch (err) {
                 console.error('Upload failed:', err);
@@ -924,6 +1124,24 @@
         }
 
         // ============================================
+        // AUTO RESET AFTER SUCCESS
+        // ============================================
+        function startAutoReset() {
+            let countdown = 3;
+            elements.successCountdown.textContent = `Starting new recording in ${countdown}...`;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    elements.successCountdown.textContent = `Starting new recording in ${countdown}...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    resetApp();
+                }
+            }, 1000);
+        }
+
+        // ============================================
         // ERROR HANDLING
         // ============================================
         function showError(message) {
@@ -932,15 +1150,16 @@
         }
 
         elements.retryBtn.addEventListener('click', resetApp);
-        elements.newRecordingBtn.addEventListener('click', resetApp);
 
         function resetApp() {
             state.audioChunks = [];
             state.audioBlob = null;
             state.startTime = null;
+            state.pausedTime = 0;
+            state.pauseStartTime = null;
+            state.finalDuration = 0;
             elements.timer.textContent = '00:00';
             elements.timer.classList.remove('warning');
-            elements.emailSection.classList.remove('visible');
             elements.participantEmail.value = '';
             elements.participantEmail.style.borderColor = '';
             elements.recordLabel.textContent = 'Tap to Record';

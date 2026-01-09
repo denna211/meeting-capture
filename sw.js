@@ -1,10 +1,11 @@
-const CACHE_NAME = 'adwise-capture-v6';
+const CACHE_NAME = 'medlock-capture-v1';
 const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
     '/icon-192.png',
-    '/icon-512.png'
+    '/icon-512.png',
+    '/MedLock_Logo.png'
 ];
 
 self.addEventListener('install', (event) => {

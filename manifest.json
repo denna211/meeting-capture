@@ -1,7 +1,7 @@
 {
     "name": "MedLock Capture",
     "short_name": "Capture",
-    "description": "Record meetings and get AI-powered summaries",
+    "description": "Capture meetings and get AI-powered summaries",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#0a0a0a",

@@ -639,7 +639,7 @@
                     </button>
                 </div>
 
-                <div class="record-label" id="recordLabel">Tap to Record</div>
+                <div class="record-label" id="recordLabel">Tap to Capture</div>
             </div>
         </div>
     </div>
@@ -657,12 +657,12 @@
             </div>
 
             <div class="recording-summary">
-                <div class="duration-label">Recording Duration</div>
+                <div class="duration-label">Conversation Duration</div>
                 <div class="duration-value" id="finalDuration">00:00</div>
             </div>
 
             <div class="consent-box">
-                <p>By providing your email, you consent to having this conversation transcribed and summarized by our AI tool. Recordings are not stored after processing and will be permanently deleted.</p>
+                <p>By providing your email, you consent to having this conversation transcribed and summarized by our AI tool. Conversations are not stored after processing and will be permanently deleted.</p>
             </div>
 
             <div class="input-group">
@@ -671,7 +671,7 @@
             </div>
 
             <button class="btn btn-primary" id="sendBtn">Send Summary</button>
-            <button class="btn btn-back" id="backBtn">← Back to Recording</button>
+            <button class="btn btn-back" id="backBtn">← Back to Capturing</button>
         </div>
     </div>
 
@@ -718,7 +718,7 @@
 
     <!-- Lock Warning -->
     <div class="lock-warning" id="lockWarning">
-        ⚠️ Keep screen on while recording
+        ⚠️ Keep screen on while capturing
     </div>
 
     <!-- Footer -->
@@ -918,10 +918,10 @@
             elements.recordingControls.classList.add('visible');
             elements.pauseBtn.classList.remove('hidden');
             elements.resumeBtn.classList.add('hidden');
-            elements.recordLabel.textContent = 'Recording...';
+            elements.recordLabel.textContent = 'Capturing...';
             elements.statusBadge.classList.add('recording');
             elements.statusBadge.classList.remove('paused');
-            elements.statusText.textContent = 'Recording';
+            elements.statusText.textContent = 'Capturing';
             elements.lockWarning.classList.add('visible');
             
             // Start timer
@@ -966,10 +966,10 @@
             // Update UI
             elements.pauseBtn.classList.remove('hidden');
             elements.resumeBtn.classList.add('hidden');
-            elements.recordLabel.textContent = 'Recording...';
+            elements.recordLabel.textContent = 'Capturing...';
             elements.statusBadge.classList.add('recording');
             elements.statusBadge.classList.remove('paused');
-            elements.statusText.textContent = 'Recording';
+            elements.statusText.textContent = 'Capturing';
             
             // Resume timer
             state.timerInterval = setInterval(updateTimer, 1000);
@@ -994,7 +994,7 @@
             // Update UI
             elements.recordBtn.classList.remove('hidden');
             elements.recordingControls.classList.remove('visible');
-            elements.recordLabel.textContent = 'Tap to Record';
+            elements.recordLabel.textContent = 'Tap to Capture';
             elements.statusBadge.classList.remove('recording', 'paused');
             elements.statusText.textContent = 'Ready';
             elements.lockWarning.classList.remove('visible');
@@ -1162,7 +1162,7 @@
             elements.timer.classList.remove('warning');
             elements.participantEmail.value = '';
             elements.participantEmail.style.borderColor = '';
-            elements.recordLabel.textContent = 'Tap to Record';
+            elements.recordLabel.textContent = 'Tap to Capture';
             elements.statusText.textContent = 'Ready';
             showScreen('main');
         }
